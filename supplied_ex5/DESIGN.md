@@ -188,7 +188,8 @@ Owns the variables visible in one block, and links to its enclosing scope.
 - fields: `boolean isWhile`, `List<String> tokens`
 - `isWhile()`, `getTokens()`, `getKind() → CONDITION`
 - `checkSemantics`: each operand must be `true`/`false`, an int/double literal, or an initialized
-  `boolean`/`int`/`double` variable; `&&` / `||` must sit between two operands.
+  `boolean`/`int`/`double` variable. It type-checks each element of `tokens` only — operator
+  placement and emptiness are the parser's responsibility (see `parseCondition`).
 
 **`ReturnLine`**
 - no fields; `getKind() → RETURN`; `checkSemantics` is a no-op.
@@ -219,7 +220,9 @@ internal organization.
   - `parseAssignment(String)` → `AssignmentLine`
   - `parseMethodDecl(String)` → `MethodDeclLine`
   - `parseMethodCall(String)` → `MethodCallLine`
-  - `parseCondition(String)` → `ConditionLine`
+  - `parseCondition(String)` → `ConditionLine`. Splits the condition on `&&`/`||`, validates that
+    operators sit between two operands, rejects an empty condition, and stores the **operands only**
+    (no operators) in `tokens`. `ConditionLine.checkSemantics` then type-checks each token.
 
 > There are 7 kinds but only 5 `parseX` helpers, because `ReturnLine` and `CloseBraceLine` carry
 > no data to extract.
