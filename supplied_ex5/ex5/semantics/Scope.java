@@ -1,6 +1,11 @@
 package ex5.semantics;
 
+import ex5.lines.Entry;
+import ex5.lines.FinalAssignmentException;
+import ex5.lines.TypeMismatchException;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Scope {
@@ -17,6 +22,7 @@ public class Scope {
     public Scope getParentScope(){
         return parentScope;
     }
+
     public void declare(String variableName , Variable newVariable) throws DuplicateVariableException {
         if (searchLocal(variableName) != null){
             throw new DuplicateVariableException(
@@ -24,6 +30,7 @@ public class Scope {
         }
         variables.put(variableName,newVariable);
     }
+
     public Variable searchLocal(String variableName){
         if (variables.containsKey(variableName)){
             return variables.get(variableName);
