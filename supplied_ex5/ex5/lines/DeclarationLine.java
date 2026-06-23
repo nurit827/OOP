@@ -12,9 +12,7 @@ public class DeclarationLine implements ParsedLine{
     public DeclarationLine(boolean isFinal, List<Entry> entries, Type type){
         this.entries = entries;
         this.isFinal = isFinal;
-        this.type = type
-
-                ;
+        this.type = type;
     }
     @Override
     public Kind getKind() {
