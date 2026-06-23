@@ -38,7 +38,7 @@ public class MethodCallLine implements ParsedLine{
                 //known variable
                 if (!variable.isInitialized()) {
                     //make sure it is initialized
-                    throw new UninitializedVariableException("Variable" + variable + "has not been initialized before being used.");
+                    throw new UninitializedVariableException("Variable " + variable + " has not been initialized before being used.");
                 }
                 if (!expectedParamType.accepts(variable.getType())) {
                     throw new TypeMismatchException("Cannot accept " + variable.getType() + " as " + expectedParamType + ".");
