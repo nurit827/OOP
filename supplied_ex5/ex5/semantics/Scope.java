@@ -49,6 +49,13 @@ public class Scope {
         }
         return null;
     }
+    public Variable search(String variableName) {
+        Variable local = searchLocal(variableName);
+        if (local != null){
+            return local;
+        }
+        return searchParent(variableName);
+    }
 
     public Variable resolve(String variableName) throws UndeclaredVariableException {
         Variable local = searchLocal(variableName);
