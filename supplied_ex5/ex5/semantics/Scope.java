@@ -58,13 +58,9 @@ public class Scope {
     }
 
     public Variable resolve(String variableName) throws UndeclaredVariableException {
-        Variable local = searchLocal(variableName);
-        if (local != null){
-            return local;
-        }
-        Variable parentVar = searchParent(variableName);
-        if (parentVar != null){
-            return parentVar;
+        Variable variable = search(variableName);
+        if (variable != null){
+            return variable;
         }
         throw new UndeclaredVariableException(
                 "Variable '" + variableName + "' is not declared in any scope.");

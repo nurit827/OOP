@@ -138,8 +138,7 @@ public class GeneralManager {
             int endIdx = range[1];
             Scope methodScope = new Scope(globalScope);
             MethodManager mm = new MethodManager(this, methodScope);
-            Par
-
+            mm.verify(parsed.subList(startIdx, endIdx));
         }
 
     }
