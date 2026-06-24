@@ -21,10 +21,7 @@ public class MethodDeclLine implements ParsedLine{
 
     @Override
     public void checkSemantics(MethodManager methodManager) throws SyntaxException {
-        GeneralManager generalManager = methodManager.getGeneralManager();
-//        if(generalManager.getMethod(name) != null){
-//            throw new DuplicateMethodException("Method "+name+" already exists");
-//        }
+        Scope currentScope = methodManager.getCurrentScope();
         Set<String> seenParams = new HashSet<String>();
         for(Param param : params){
             String paramName = param.getName();
@@ -37,6 +34,9 @@ public class MethodDeclLine implements ParsedLine{
                 //duplicated names
                 throw new DuplicateMethodException("Duplicate parameter name "+paramName);
             }
+            Variable paramVar = new Variable(paramType, false);
+            paramVar.markInitialized();
+            currentScope.declare(paramName,paramVar);
         }
     }
 
