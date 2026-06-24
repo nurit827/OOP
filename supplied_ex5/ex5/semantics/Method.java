@@ -2,32 +2,37 @@ package ex5.semantics;
 
 import java.util.List;
 
+/**
+ * A method signature (name and parameter types) that method calls are validated against.
+ *
+ * @author Nurit Tolkowsky, Mili Green
+ */
 public class Method {
-    private final String name;
-    private final List<Type> paramList;
+	private final String name;
+	private final List<Type> paramList;
 
-    public Method(String name, List<Type> paramList){
-        this.name = name;
-        this.paramList = paramList;
-    }
+	/**
+	 * Creates a new instance.
+	 *
+	 * @param name      the method's name
+	 * @param paramList the method's parameter types in declaration order
+	 */
+	public Method(String name, List<Type> paramList) {
+		this.name = name;
+		this.paramList = paramList;
+	}
 
-    public String getName(){
-        return name;
-    }
+	/**
+	 * @return the method's name
+	 */
+	public String getName() {
+		return name;
+	}
 
-    public List<Type> getParamList() {
-        return paramList;
-    }
-
-    public boolean match(List<Type> paramCompare){
-        if (paramCompare.size()!=paramList.size()){
-            return false;
-        }
-        for (int i=0; i<paramCompare.size(); i++){
-            if (!paramList.get(i).accepts(paramCompare.get(i))){
-                return false;
-            }
-        }
-        return true;
-    }
+	/**
+	 * @return the method's parameter types in declaration order
+	 */
+	public List<Type> getParamList() {
+		return paramList;
+	}
 }

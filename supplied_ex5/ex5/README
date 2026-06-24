@@ -1,0 +1,27 @@
+milig, nurit2000
+322482233, 211821798
+
+We wrote the Regex patterns mostly in the parser class to make sure we are reading the correct command and that the basic semantics are correct ( we later on checked the type matching, etc). 
+1) DECLARATION_PATTERN = Pattern.compile("^\\s*(final\\s+)?" + TYPE_KW + "\\s+(.+?)\\s*;\\s*$");
+It is splined into 4 main components: 
+- ^\\s*(final\\s+)? - after spaces or tabs this part checks if the variable is final or not.
+- TYPE_KW - is defined (int|char|String|boolean|double), this part insure that after the final declaration the kind of the variable is declared and is acceptable by the s-java.
+- \\s+(.+?) - this is a non greedy capturing group. It allows to declare multiple variables, we later check that they were separated by commas and declared properly using String function (split etc.)
+-\\s*;\\s* - this part major rule is to make sure the user ended the line with a ';' even if it is surrounded by spaces or tabs. We added '$' to make sure no extra code was added after the';' which marks the end of the line.
+
+2) METHOD_CALL = Pattern.compile("^\\s*([a-zA-Z]\\w*)\\s*\\(\\s*(.*?)\\s*\\)\\s*;\\s*$");
+This pattern is also divide in to 4 major parts:
+-^\\s*([a-zA-Z]\\w*) - the '^' makes sure it matches from the beginning also //s* allows spaces and tabs. The fires capturing group is ([a-zA-Z]\\w*), the [a-zA-Z] makes sure that the name begins with a letter, afterwards it can continue with a letters, digits and underscores (as described by the instructions). This groups separation allowed us to save the name of the method by simply using .group(1) command.
+- \\s*\\(\\s* - this part is the beginning of handling the arguments part. the '\\(' matches to the opening of the parathesis and the \\s* from both sides allow for spaces.
+- (.*?) - is the second capturing group it is designed to grab the input of the arguments. The '.*' allows us to capture empty argument list or a complex one. Like in declaration, we handle the parsing of each argument in the java code itself.
+- \\s*\\)\\s*;\\s*$ - this last part matches the closing parenthesis and the ';' which has to close the command- this allows spaces and tabs also from each part. Again, the $ anchor guarantees the line legally ends right there without trailing text.
+
+The Design choices we made are as follows:
+* We made a Two-pass Architecture: we split it into two passes to avoid Method calling that isn't declared. Pass 1 strictly saves the global scope and method signature, while pass 2 walks through the method bodies to check internal logic.
+* Our code supports Polymorphism, we separated syntax from logic. The parser only checks the grammar using Regex. While every command is translated into a ParsedLine object, which is responsible for checking its own semantic rules using its checkSemantics() method.
+* Scope Hierarchy: The scope class acts as a layered memory, this allows the local blocks to safely read parent variables without overwriting the global state. 
+The Modules Rules:
+- Parsing -Uses Regex to validate basic syntax and translates the raw text into ParsedLine objects.
+- Lines - Object representations of the code. Their role is to validate their own specific semantic rules against the current memory scope.
+- Semantics- The core engine. The GeneralManager handles Pass 1, the MethodManager handles the Methods body in Pass 2, and Scope tracks variable initialization and types.
+- Main - The entry point of the program. It handles file reading (I/O), initializes the GeneralManager, and catches any top-level errors to print the final compilation result.
